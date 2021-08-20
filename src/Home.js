@@ -5,6 +5,8 @@ const Home = ({
     params,
 }) => {
     const [data,setData]=useState([])
+    const [data2,setData2]=useState([])
+    const [data3,setData3]=useState([])
     const [error,setError]=useState(null)
     const [isLoading, setIsLoading] = useState(false);
     const [control,setControl]=useState(false)
@@ -16,10 +18,29 @@ const Home = ({
                 setIsLoading(false), setError(err)} );
             
         };
+        const getEpisodes2 = () => {
+            fetch("https://rickandmortyapi.com/api/episode?page=2", {
+            method: 'GET',
+                }).then((response)=>response.json()).then((json)=>{setData2(json.results),setIsLoading(false) ,setControl(true) })
+                .catch((err)=> {
+                    setIsLoading(false), setError(err)} );
+                
+            };
+        const getEpisodes3 = () => {
+                fetch("https://rickandmortyapi.com/api/episode?page=3", {
+                method: 'GET',
+                    }).then((response)=>response.json()).then((json)=>{setData3(json.results),setIsLoading(false) ,setControl(true) })
+                    .catch((err)=> {
+                        setIsLoading(false), setError(err)} );
+                    
+                };
 
     useEffect(() => {
         setIsLoading(true);
         getEpisodes()
+        getEpisodes2()
+        getEpisodes3()
+        data.concat(data2,data3)
     }, [])
     
     const renderItem =({item}) => {
