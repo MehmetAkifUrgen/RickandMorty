@@ -138,7 +138,7 @@ const styles=StyleSheet.create({
     marginHorizontal:wp('2%'),
     marginVertical:hp('1%'),
     width:wp('80%'),
-    backgroundColor:'#F5F5F5',
+    backgroundColor:'black',
     padding:wp('2%'),
     borderRadius:wp('2%')
   },
@@ -168,7 +168,7 @@ const styles=StyleSheet.create({
   },
   headView:{
     marginTop:hp('2%'),
-    backgroundColor:'#F5F5F5',
+    backgroundColor:'black',
     padding:wp('1%'),
     borderRadius:wp('2%'),
     shadowColor:'#F5F5F5',
@@ -178,7 +178,7 @@ const styles=StyleSheet.create({
     marginBottom:hp('5%')
   },
   headText:{
-    color:'#414A4C'
+    color:'white'
   },
   mainBackImage:{
     position:'absolute',

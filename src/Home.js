@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from 'react';
 import { FlatList, StyleSheet, Text, ActivityIndicator, TouchableOpacity, View, ImageBackground, Animated,Easing } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import AnimatedSplash from "react-native-animated-splash-screen";
 
 const Home = ({
     navigation,
@@ -14,6 +14,7 @@ const Home = ({
     const [control,setControl]=useState(false)
     const [allData,setAllData]=useState([])
     const [defaultSeason,setSeason]=useState("S01")
+    const [splash,setSplash]=useState(false)
     const scaleAnimated=new Animated.Value(.7)
     const getEpisodes = () => {
         fetch("https://rickandmortyapi.com/api/episode", {
@@ -50,6 +51,7 @@ const Home = ({
 
     useEffect(() => {
         setIsLoading(true);
+        setSplash(true)
         getEpisodes()
         getEpisodes2()
         getEpisodes3()
@@ -83,9 +85,19 @@ const Home = ({
     if (isLoading) {
         allData.concat(data,data2,data3)
         return (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+            <AnimatedSplash 
+            
+            translucent={true}
+            isLoaded={splash}
+            logoImage={require("../assets/splash.jpg")}
+            backgroundColor={"#262626"}
+            logoHeight={hp('100%')}
+            logoWidth={wp('100%')}
+          >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
            <ActivityIndicator size="large" color="#5500dc" />
           </View>
+          </AnimatedSplash>
         );
      }
     if (error) {
