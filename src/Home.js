@@ -1,8 +1,10 @@
 import React,{useEffect,useState} from 'react';
-import { FlatList, StyleSheet, Text, ActivityIndicator, TouchableOpacity, View, ImageBackground, Touchable } from 'react-native';
+import { FlatList, StyleSheet, Text, ActivityIndicator, TouchableOpacity, View, ImageBackground, Animated,Easing } from 'react-native';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 
 const Home = ({
-    params,
+    navigation,
 }) => {
     const [data,setData]=useState([])
     const [data2,setData2]=useState([])
@@ -12,6 +14,7 @@ const Home = ({
     const [control,setControl]=useState(false)
     const [allData,setAllData]=useState([])
     const [defaultSeason,setSeason]=useState("S01")
+    const scaleAnimated=new Animated.Value(.7)
     const getEpisodes = () => {
         fetch("https://rickandmortyapi.com/api/episode", {
         method: 'GET',
@@ -36,6 +39,14 @@ const Home = ({
                         setIsLoading(false), setError(err)} );
                     
                 };
+                const startAnimations = () => {
+                    Animated.timing(scaleAnimated,{
+                      toValue:1,
+                      duration:2000,
+                      useNativeDriver:false,
+                      easing:Easing.elastic(10)
+                    }).start()
+                };
 
     useEffect(() => {
         setIsLoading(true);
@@ -44,11 +55,16 @@ const Home = ({
         getEpisodes3()
         
     }, [])
+    useEffect(() => {
+        
+      startAnimations()
+    })
     
     const renderItem =({item}) => {
+        const url=item.url
         if(item.episode.substr(0,3)==defaultSeason)
             return(
-                <TouchableOpacity style={styles.item}>
+                <TouchableOpacity onPress={()=> navigation.navigate('Detail',{url})} style={styles.item}>
                         <View style={styles.itemLeftView}>
                                 <Text allowFontScaling style={styles.episodeName}>
                                     {item.name}
@@ -89,24 +105,27 @@ const Home = ({
         <View style={styles.container}>
             <ImageBackground   style={styles.mainBackImage} source={require('../assets/background.jpg')}></ImageBackground>
             <View style={styles.header} >
-                   <ImageBackground
+                   <Animated.Image
                     resizeMode="stretch"
                     source={require('../assets/head.png')}
-                    style={styles.headImage}
+                    style={{ width:'100%',
+                    height:'100%',transform:[{
+                        scale:scaleAnimated
+                    }]}}
                    />
             </View>
             <View style={styles.seasonView}>
                 <TouchableOpacity style={styles.seasonButtons} onPress={()=> setSeason("S01")}>
-                    <Text style={[styles.episodeName,{color:'grey',fontSize:13}]}>SEASON 1</Text>
+                    <Text style={[styles.episodeName,{color:'grey',fontSize:hp('1.7%')}]}>SEASON 1</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.seasonButtons} onPress={()=> setSeason("S02")}>
-                <Text style={[styles.episodeName,{color:'grey',fontSize:13}]}>SEASON 2</Text>
+                <Text style={[styles.episodeName,{color:'grey',fontSize:hp('1.7%')}]}>SEASON 2</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.seasonButtons} onPress={()=> setSeason("S03")}>
-                <Text style={[styles.episodeName,{color:'grey',fontSize:13}]}>SEASON 3</Text>
+                <Text style={[styles.episodeName,{color:'grey',fontSize:hp('1.7%')}]}>SEASON 3</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.seasonButtons} onPress={()=> setSeason("S04")}>
-                <Text style={[styles.episodeName,{color:'grey',fontSize:13}]}>SEASON 4</Text>
+                <Text style={[styles.episodeName,{color:'grey',fontSize:hp('1.7%')}]}>SEASON 4</Text>
                 </TouchableOpacity>
             </View>
             <FlatList
@@ -125,36 +144,35 @@ const styles=StyleSheet.create({
         
     },
     header:{
-        height:'20%',
-        backgroundColor:'pink',
-        width:'100%'
+        height:hp('20%'),
+        width:wp('100%')
     },
     itemLeftView:{
         flexDirection:'column',
-        padding:10,
+        padding:wp('1%'),
         width:'70%'
     },
     episodeName:{
         color:'white',
-        fontSize:18,
+        fontSize:hp('2.2%'),
         fontWeight:'600'
     },
     episodeDate:{
         color:'gold',
-        fontSize:14,
+        fontSize:hp('1.8%'),
         fontWeight:'500'
     },
     episode:{
         color:'white',
-        fontSize:16,
+        fontSize:hp('2%'),
         fontWeight:'700'
     },
     item:{
         flex:1,justifyContent:'space-between',alignItems:'center',flexDirection:'row',
-        borderBottomWidth:2,
+        borderBottomWidth:wp('1%'),
         borderBottomColor:'tomato',
         marginHorizontal:5,
-        height:'20%',
+        height:hp('10%'),
         
     },
     headImage:{
@@ -171,15 +189,15 @@ const styles=StyleSheet.create({
     seasonView:{
         flexDirection:'row',
         justifyContent:'space-between',
-        marginHorizontal:20,
-        padding:10,
+        marginHorizontal:wp('2%'),
+        padding:wp('1%'),
         alignItems:'center',
         width:'80%'
     },
     seasonButtons:{
         backgroundColor:'white',
-        padding:5,
-        borderRadius:5
+        padding:wp('1%'),
+        borderRadius:wp('1%')
     }
 })
 
